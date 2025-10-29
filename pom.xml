@@ -32,9 +32,9 @@
 	</developers>
 	
 	<scm>
-		<connection>scm:git:git://github.com/karthik-tarento/cb-common-util.git</connection>
-		<developerConnection>scm:git:ssh://github.com:karthik-tarento/cb-common-util.git</developerConnection>
-		<url>https://github.com/karthik-tarento/cb-common-util/tree/cbrelease-4.8.30</url>
+		<connection>scm:git:git://github.com/karthik-tarento/cb-common-util-public.git</connection>
+		<developerConnection>scm:git:ssh://github.com:karthik-tarento/cb-common-util-public.git</developerConnection>
+		<url>https://github.com/karthik-tarento/cb-common-util-public/tree/cbrelease-4.8.30</url>
 	</scm>
 	<properties>
 		<java.version>17</java.version>
@@ -93,12 +93,12 @@
 		<repository>
 			<id>github</id>
 			<name>iGOT Common Utility</name>
-			<url>https://maven.pkg.github.com/karthik-tarento/cb-common-util</url>
+			<url>https://maven.pkg.github.com/karthik-tarento/cb-common-util-public</url>
 		</repository>
 		<snapshotRepository>
 			<id>github</id>
 			<name>iGOT Common Utility Snapshots</name>
-			<url>https://maven.pkg.github.com/karthik-tarento/cb-common-util</url>
+			<url>https://maven.pkg.github.com/karthik-tarento/cb-common-util-public</url>
 		</snapshotRepository>
 	</distributionManagement>
 
@@ -172,20 +172,57 @@
 					</execution>
 				</executions>
 			</plugin>
-			
-			<!-- Sonatype Nexus staging plugin -->
-			<plugin>
-				<groupId>org.sonatype.plugins</groupId>
-				<artifactId>nexus-staging-maven-plugin</artifactId>
-				<version>1.6.13</version>
-				<extensions>true</extensions>
-				<configuration>
-					<serverId>ossrh</serverId>
-					<nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-					<autoReleaseAfterClose>true</autoReleaseAfterClose>
-				</configuration>
-			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<!-- Profile for GitHub Packages deployment (no GPG signing required) -->
+		<profile>
+			<id>github</id>
+			<build>
+				<plugins>
+					<!-- Skip GPG signing for GitHub Packages -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<configuration>
+							<skip>true</skip>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		
+		<!-- Profile for Maven Central deployment (requires GPG signing) -->
+		<profile>
+			<id>central</id>
+			<build>
+				<plugins>
+					<!-- Sonatype Nexus staging plugin for Maven Central -->
+					<plugin>
+						<groupId>org.sonatype.plugins</groupId>
+						<artifactId>nexus-staging-maven-plugin</artifactId>
+						<version>1.6.13</version>
+						<extensions>true</extensions>
+						<configuration>
+							<serverId>ossrh</serverId>
+							<nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+							<autoReleaseAfterClose>true</autoReleaseAfterClose>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+			<distributionManagement>
+				<repository>
+					<id>ossrh</id>
+					<url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+				</repository>
+				<snapshotRepository>
+					<id>ossrh</id>
+					<url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+				</snapshotRepository>
+			</distributionManagement>
+		</profile>
+	</profiles>
 
 </project>
