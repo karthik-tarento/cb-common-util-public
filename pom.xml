@@ -10,10 +10,10 @@
 	</parent>
 	<groupId>org.igot</groupId>
 	<artifactId>common-util</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 	<name>Common Util</name>
 	<description>Common Utility for iGOT services - JWT validation and crypto utilities</description>
-	<url>https://github.com/yourusername/cb-common-util</url>
+	<url>https://github.com/karthik-tarento/cb-common-util-public</url>
 	
 	<licenses>
 		<license>
